@@ -1,9 +1,16 @@
-set number " Line numbers on
-set relativenumber " Overriding set number for now
-set ruler " Coordinates at bottom right
+" Not usually necessary:
+set nocompatible
+" set number 
 
-syntax on " Syntax highlighting
-" set colorcolumn=80 " Highlight column 80 to avoid long lines.
+" Use relative instead of absolute line numbering: 
+set relativenumber 
+" Coordinates at bottom right:
+set ruler 
+
+syntax on 
+
+" Highlight column 80 to avoid long lines.
+" set colorcolumn=80 
 
 set backspace=indent,eol " Allow backspace over autoindent and line breaks
 " set backspace=start to allow over the start of insert.
@@ -41,3 +48,10 @@ endif
 
 " ideas for remaps:
 " shift+tab = za (fold toggle)
+
+" REMAPS
+
+" Force gf to open a new file if it doesn't exist.
+map gf :vnew <cfile><CR>
+
+" TODO: How to check for modified hidden buffers so they aren't lost when closing?
