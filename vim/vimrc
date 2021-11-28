@@ -1,0 +1,185 @@
+" Garrison Osteen's .vimrc "
+" Many, many thanks to vimcasts.org for helpful ideas.
+" -------- BEGIN vim-plug section -------- "
+call plug#begin('~/.vim/plugged')
+
+Plug 'lervag/vimtex'
+let g:tex_flavor='latex'
+"let g:vimtex_view_method='zathura'
+let g:vimtex_quickfix_mode=0
+set conceallevel=1
+let g:tex_conceal='abdmg'
+
+call plug#end()
+" -------- END vim-plug section -------- "
+
+" -------- Miscellanea -------- " 
+    set nocompatible " Not usually necessary?
+    let mapleader = ","
+    set cm=blowfish2 " Crypt method blowfish2 is the recommended, better method.
+    
+" wildmenu - Enable a menu at the console when typing commands and pressing tab. 
+" Longest - complete to longest common command first
+" Full - complete to first full command next
+    set wildmenu
+    set wildmode=list:longest,full
+" Allow mouse support:
+    set mouse=a
+" Allegedly restore sensible default mouse behavior for Alacritty:
+    set ttymouse=sgr
+
+" -------- Line Numbering -------- "
+" Use relative instead of absolute line numbering.
+" NOTE: according to some, this can cause vim to be laggy in some cases (large files with syntax highlighting) due to it redrawing every line.
+    set relativenumber 
+" Coordinates at bottom right:
+    set ruler 
+" Highlight column 80 to avoid long lines:
+    " set colorcolumn=80 
+    
+" Allow backspace over autoindent and line breaks:
+    set backspace=indent,eol 
+"set backspace=start " allow backspace over the start of insert.
+" wrap allows line wrapping, linebreak forces breaks on word boundaries, and nolist hides invisible characters:
+    set wrap linebreak nolist 
+
+" ------- Indentation Settings ------- 
+" Expand tabs into spaces:
+    set expandtab 
+    set shiftwidth=4 
+    set tabstop=4
+    set autoindent 
+
+" Best default choice for foldmethod:
+    set foldmethod=indent
+" Start with lines folded:
+    set foldlevelstart=1
+
+" Ignore case in searches. Use \C in search pattern to make case sensitive:
+    set ignorecase 
+" Ignore case UNLESS capitals are used:
+    set smartcase 
+
+    set showcmd
+
+    set visualbell
+    set t_vb=
+" Split below and to the right, obviously:
+    set splitbelow splitright
+
+" -------- Colors and Highlighting -------- "
+    syntax on 
+" Enable true colors if available:
+    "set termguicolors
+    highlight Comment cterm=italic gui=italic
+    "colorscheme twilight
+
+    set t_Co=256
+    if has('gui_running')
+    "  colorscheme Spacedust " twilight is good too.
+    "  set background=dark
+    else
+    "  set background=light
+    "  colorscheme twilight
+    endif
+
+" To make search term highlighting in the quickfix menu readable:
+    highlight Search cterm=NONE ctermfg=black ctermbg=yellow
+
+"highlight Normal ctermbg=NONE
+"highlight nonText ctermbg=NONE
+
+" -------- Remaps -------- "
+
+" ideas for remaps:
+" shift+tab = za (fold toggle)
+
+" Use <++> as a marker to jump to when filling in snippets
+    inoremap <Tab><Tab> <Esc>/<++><Enter>"_c4l
+" Better splits navigation:
+    map <C-h> <C-w>h
+    map <C-j> <C-w>j
+    map <C-k> <C-w>k
+    map <C-l> <C-w>l
+" Why use colons when we could use semicolons?
+    map ; :
+
+" Toggle visible whitespace:
+    noremap <Leader>l :set list!<CR>
+" Use prettier whitespace symbols:
+    set listchars=tab:▸\ ,eol:¬
+" Toggle spellchecking:
+    nmap <silent> <leader>s :set spell!<CR>
+" Open vimrc in new tab:
+    nmap <leader>v :tabedit $MYVIMRC<CR>
+
+" ------- ZETTELKASTEN ------- "
+" Force gf to open a new file if it doesn't exist:
+    map gf :vnew <cfile><CR>
+" map gf :tabedit <cfile><CR>
+    map <C-w>gf :tabedit <cfile><CR>
+" Insert a timestamp:
+    noremap <Leader>d "=strftime("%y%m%d%H%M%S")<CR>p
+" Yank Zettelkasten title and filename to registers t and d:
+" (I'm sure this could be better designed)
+    noremap <Leader>y ggww"tyi"j"dyiW
+" Paste registers t and d with markdown title/link format.
+    noremap <Leader>p a[<Esc>"tpa](<Esc>"dpa)<Esc>
+
+" ------ Autocommand stuff ------ "
+"
+" Only do this part when compiled with support for autocommands:
+if has("autocmd")
+    filetype on
+
+    autocmd FileType make setlocal ts=8 sts=8 sw=8 noexpandtab
+    autocmd FileType markdown setlocal ts=2 sts=2 sw=2 expandtab
+    " Automatically source my vimrc when it is written (does this not work
+    " because my vimrc is actually just called vimrc and not .vimrc?
+    autocmd bufwritepost .vimrc source $MYVIMRC
+    "autocmd FileType tex inoremap ;g <Esc>
+
+" This is undoubtedly not the best way to do this, but for now, a shortcut to
+" insert a minipage centered image in a tex document.
+    "autocmd FileType tex inoremap ;f \begin{figure}[H]<Enter>\centering<Enter>\begin{minipage}[b]{0.6\textwidth}<Enter>\includegraphics[width=\textwidth]{figures/<++>}<Enter>\caption{<++>}<Enter>\label{fig:<++>}<Enter>\end{minipage}<Enter>\end{figure}
+    autocmd FileType tex inoremap ;f \begin{figure}[H]<Enter>\centering<Enter>\includegraphics[width=<++>\textwidth]{figures/<++>}<Enter>\caption{<++>}<Enter>\label{fig:<++>}<Enter>\end{figure}<Enter><++><Esc>5k0
+    autocmd FileType tex inoremap ;2f \begin{figure}[H]<Enter>\centering<Enter>\begin{minipage}[b]{0.45\textwidth}<Enter>\includegraphics[width=\textwidth]{sections/<++>}<Enter>\caption{<++>}<Enter>\label{fig:<++>}<Enter>\end{minipage}<Enter>\hfill<Enter>\begin{minipage}[b]{0.45\textwidth}<Enter>\includegraphics[width=\textwidth]{sections/<++>}<Enter>\caption{<++>}<Enter>\label{fig:<++>}<Enter>\end{minipage}<Enter>\end{figure}
+    "autocmd FileType tex nnoremap <Leader>t /table}<Enter>cwcenter<Esc>n.
+    autocmd FileType tex inoremap ;r ~\ref{fig:}<++><Esc>4hi
+    autocmd FileType tex inoremap ;n \multicolumn{<++>}{l}{\cellcolor[HTML]{C0C0C0}\begin{tabular}[c]{@{}p{\textwidth}@{}}<++>\end{tabular}}
+    autocmd FileType tex inoremap ;c \colorbox[HTML]{<++>}{\color[HTML]{<++>}<++>}<++>
+
+    autocmd BufNewFile,BufRead *.pde set filetype=processing
+    autocmd FileType processing set smartindent
+    autocmd FileType processing set syntax=java
+    autocmd FileType processing setlocal ts=2 sts=2 sw=2 expandtab
+
+    autocmd FileType python set ts=4 sts=4 sw=4 expandtab autoindent fileformat=unix
+endif
+
+"\begin{figure}[H]
+"	\centering
+"	\begin{minipage}[b]{0.3\textwidth}
+"		\includegraphics[width=\textwidth]{figures/FIGURE1.png}
+"		\caption{FIGURE1_NAME}
+"		\label{fig:FIGURE1}
+"	\end{minipage}
+"	\hfill
+"	\begin{minipage}[b]{0.6\textwidth}
+"		\includegraphics[width=\textwidth]{figures/FIGURE2.png}
+"		\caption{FIGURE2_NAME}
+"		\label{fig:FIGURE2}
+"	\end{minipage}
+"\end{figure}
+"	\begin{figure}[H]
+"	\centering
+"		\includegraphics[width=0.9\textwidth]{figures/eyes.png}
+"		\caption{Needle Felting the Eyes}
+"		\label{fig:eyes}
+"	\end{figure}	
+" ------ LATEX --------- "
+
+" let @t='/table}cwcentern./tabular}cwlongtablen.'
+" let @t='gg/tablecwcenterýan.gg/[]xx/tabularcwlongtableýaGN.gg/RowA \endheadýa'
+let @t='gg/tablecwcenterýan.gg/[]xx/tabularcwlongtableýaGN.gg/RowA \endheadýagg/rli>{\bfseries}ýa'
+" TODO: How to check for modified hidden buffers so they aren't lost when closing?
