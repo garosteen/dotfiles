@@ -70,9 +70,9 @@ call plug#end()
 " -------- Colors and Highlighting -------- "
     syntax on 
 " Enable true colors if available:
-    "set termguicolors
+    set termguicolors
     highlight Comment cterm=italic gui=italic
-    "colorscheme twilight
+    colorscheme twilight
 
     set t_Co=256
     if has('gui_running')
@@ -155,6 +155,9 @@ if has("autocmd")
     autocmd FileType processing setlocal ts=2 sts=2 sw=2 expandtab
 
     autocmd FileType python set ts=4 sts=4 sw=4 expandtab autoindent fileformat=unix
+" Set CTRL-P to run a python file:
+" See https://stackoverflow.com/a/18948530
+    autocmd FileType python map <buffer> <C-p> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 endif
 
 "\begin{figure}[H]
