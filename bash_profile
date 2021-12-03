@@ -1,3 +1,7 @@
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi
+
 export PATH=${PATH}:~/android-sdk-macosx/tools
 export PATH=${PATH}:~/android-sdk-macosx/platform-tools
 export PATH=/usr/local/opt/vim/bin:${PATH}
