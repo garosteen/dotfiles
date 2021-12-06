@@ -1,14 +1,17 @@
 " Garrison Osteen's .vimrc "
 " Many, many thanks to vimcasts.org for helpful ideas.
 " -------- BEGIN vim-plug section -------- "
+"  Note: Call :PlugInstall to install new plugins.
 call plug#begin('~/.vim/plugged')
 
 Plug 'lervag/vimtex'
+Plug 'tpope/vim-fugitive'
 let g:tex_flavor='latex'
 "let g:vimtex_view_method='zathura'
 let g:vimtex_quickfix_mode=0
 set conceallevel=1
 let g:tex_conceal='abdmg'
+
 
 call plug#end()
 " -------- END vim-plug section -------- "
