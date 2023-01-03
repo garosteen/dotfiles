@@ -6,6 +6,8 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'lervag/vimtex'
 Plug 'tpope/vim-fugitive'
+Plug 'masukomi/vim-markdown-folding'
+
 let g:tex_flavor='latex'
 "let g:vimtex_view_method='zathura'
 let g:vimtex_quickfix_mode=0
@@ -21,6 +23,7 @@ call plug#end()
     let mapleader = ","
     set cm=blowfish2 " Crypt method blowfish2 is the recommended, better method.
     
+    let g:markdown_fold_override_foldtext = 0 " Otherwise vim-markdown-folding breaks my foldtext
 " wildmenu - Enable a menu at the console when typing commands and pressing tab. 
 " Longest - complete to longest common command first
 " Full - complete to first full command next
@@ -54,7 +57,7 @@ call plug#end()
     set autoindent 
 
 " Best default choice for foldmethod:
-    set foldmethod=indent
+    set foldmethod=indent " Broken for markdown folding?
 " Start with lines folded:
     set foldlevelstart=1
 
@@ -134,9 +137,12 @@ call plug#end()
 " Only do this part when compiled with support for autocommands:
 if has("autocmd")
     filetype on
+" Required for vim-markdown-folding plugin:
+    filetype plugin indent on 
 
     autocmd FileType make setlocal ts=8 sts=8 sw=8 noexpandtab
     autocmd FileType markdown setlocal ts=2 sts=2 sw=2 expandtab
+    autocmd FileType markdown set foldmethod=expr
     " Automatically source my vimrc when it is written (does this not work
     " because my vimrc is actually just called vimrc and not .vimrc?
     autocmd bufwritepost .vimrc source $MYVIMRC
@@ -161,6 +167,9 @@ if has("autocmd")
 " Set CTRL-P to run a python file:
 " See https://stackoverflow.com/a/18948530
     autocmd FileType python map <buffer> <C-p> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
+" Vsk() function is in .vim/autocmd/vsketch.vim, so that it isn't sourced
+" multiple times, resulting in an error. 
+    autocmd FileType python map <leader>k :call vsketch#Vsk()<CR>
 endif
 
 "\begin{figure}[H]
@@ -189,3 +198,36 @@ endif
 " let @t='gg/tablecwcenterýan.gg/[]xx/tabularcwlongtableýaGN.gg/RowA \endheadýa'
 let @t='gg/tablecwcenterýan.gg/[]xx/tabularcwlongtableýaGN.gg/RowA \endheadýagg/rli>{\bfseries}ýa'
 " TODO: How to check for modified hidden buffers so they aren't lost when closing?
+
+" This function could be a good starting place for custom fold text. From
+" vim-markdown-folding source code.
+function! MyFoldText()
+  let level = HeadingDepth(v:foldstart)
+  let indent = repeat('#', level)
+  let title = substitute(getline(v:foldstart), '^#\+\s\+', '', '')
+  let foldsize = (v:foldend - v:foldstart)
+  let linecount = '['.foldsize.' line'.(foldsize>1?'s':'').']'
+
+  if level < 6
+    let spaces_1 = repeat(' ', 6 - level)
+  else
+    let spaces_1 = ' '
+  endif
+
+  if exists('*strdisplaywidth')
+      let title_width = strdisplaywidth(title)
+  else
+      let title_width = len(title)
+  endif
+
+  if title_width < 40
+    let spaces_2 = repeat(' ', 40 - title_width)
+  else
+    let spaces_2 = ' '
+  endif
+
+  return indent.spaces_1.title.spaces_2.linecount
+endfunction
+
+" Set custom foldtext function:
+" set foldtext=MyFoldText()
