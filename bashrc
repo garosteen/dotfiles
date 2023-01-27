@@ -22,3 +22,6 @@ source ~/.git-completion.bash
     # Consider learning more about this, maybe there's a better one?
 
 alias python=/usr/local/bin/python3
+
+# Created by `pipx` on 2023-01-26 04:01:48
+export PATH="$PATH:/Users/gosteen/.local/bin"
