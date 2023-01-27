@@ -5,9 +5,6 @@ fi
 export PATH=${PATH}:~/android-sdk-macosx/tools
 export PATH=${PATH}:~/android-sdk-macosx/platform-tools
 export PATH=/usr/local/opt/vim/bin:${PATH}
-# Some errors with vim not knowing where syntax.vim is: 
-# Had to export VIMRUNTIME so it knows where vim actually is. Not sure why homebrew didn't get this right?
-export VIMRUNTIME=/usr/local/opt/vim/share/vim/vim82
 
 # Setting PATH for Python 2.7
 # The orginal version is saved in .bash_profile.pysave
@@ -59,3 +56,6 @@ function psetup {
      mkdir $sketch; touch $sketch/$sketch.pde; cd $sketch;
 }
 
+
+# Created by `pipx` on 2023-01-26 04:01:48
+export PATH="$PATH:/Users/gosteen/.local/bin"
