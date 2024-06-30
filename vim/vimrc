@@ -1,12 +1,15 @@
 " Garrison Osteen's .vimrc "
 " Many, many thanks to vimcasts.org for helpful ideas.
 " -------- BEGIN vim-plug section -------- "
+"  vim-plug is the plugin manager
+"  Add a Plug line below to include a new plugin.
 "  Note: Call :PlugInstall to install new plugins.
 call plug#begin('~/.vim/plugged')
 
 Plug 'lervag/vimtex'
 Plug 'tpope/vim-fugitive'
 Plug 'masukomi/vim-markdown-folding'
+Plug 'tpope/vim-surround'
 
 let g:tex_flavor='latex'
 "let g:vimtex_view_method='zathura'
