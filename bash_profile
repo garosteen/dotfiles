@@ -8,8 +8,15 @@ export PATH=/usr/local/opt/vim/bin:${PATH}
 
 # Setting PATH for Python 2.7
 # The orginal version is saved in .bash_profile.pysave
-PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
-export PATH
+#PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
+#export PATH
+# Problems with PYTHONPATH, Pip, version control, etc. Modules not found after installing.
+# python3.9 -m pip show <packagename> 
+# To figure out WHERE the package has been installed
+# Added it to PYTHONPATH like so:
+export PYTHONPATH="/usr/local/lib/python3.9/site-packages:${PYTHONPATH}"
+# Ugly solution, not happy with this, because what happens every time I upgrade? 
+# Hopefully will find some other way to do this.
 
 alias ..='cd ..'
 alias ls='ls -FG'
@@ -25,8 +32,8 @@ myfortune
 # Eventually i'll need to make sure that this fortune file exists, or maybe move it somewhere better. 
 # Setting PATH for Python 3.5
 # The original version is saved in .bash_profile.pysave
-PATH="/Library/Frameworks/Python.framework/Versions/3.5/bin:${PATH}"
-export PATH
+#PATH="/Library/Frameworks/Python.framework/Versions/3.5/bin:${PATH}"
+#export PATH
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
