@@ -10,6 +10,7 @@ Plug 'lervag/vimtex'
 Plug 'tpope/vim-fugitive'
 Plug 'masukomi/vim-markdown-folding'
 Plug 'tpope/vim-surround'
+Plug 'preservim/nerdcommenter'
 
 let g:tex_flavor='latex'
 "let g:vimtex_view_method='zathura'
